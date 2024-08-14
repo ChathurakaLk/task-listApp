@@ -17,6 +17,7 @@
 
         .btn3 {
             border: none;
+            color: #61bfe7;
             font-size: 25px;
         }
 
@@ -27,7 +28,7 @@
         }
 
         .table {
-            background-color: wheat !important;
+            color: wheat !important;
         }
     </style>
 @endsection
@@ -52,7 +53,7 @@
             </div>
         </div>
 
-        <table class="table">
+        <table class="table mt-3">
             <thead>
                 @forelse ($tasks as $task)
                     <tr>
@@ -74,7 +75,7 @@
                         $priorityColor = '#e5ad06';
                         break;
                     case 'low':
-                        $priorityColor = 'blue';
+                        $priorityColor = '#61bfe7';
                         break;
                 }
                 ?>
@@ -82,21 +83,24 @@
                     <td style="color: {{ $priorityColor }}">{{ $task->title }}</td>
                     <td style="color: {{ $priorityColor }}">{{ $task->priority }}</td>
                     <td>{{ $task->status }}</td>
-                    <td>
-                        <div class="d-flex">
-                            <div class="mx-2">
+                    <td colspan="4">
+                        <div class="d-flex justify-content-end">
+                            <div class="mx-1">
                                 <a href="{{ route('tasks.edit', $task->id) }}" class="btn1"><i
                                         class="fa-solid fa-pen-to-square"></i></a>
                             </div>
-                            <div class="mx-2">
+                            <div class="mx-1">
                                 <a href="{{ route('tasks.show', $task->id) }}" class="btn3"><i
                                         class="fa-regular fa-eye"></i></a>
                             </div>
-                            <div>
-                                <form action="{{ route('tasks.delete', $task->id) }}" method="POST">
+                            <div class="mx-1">
+                                <form id="delete-task-form-{{ $task->id }}"
+                                    action="{{ route('tasks.delete', $task->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn2" type="submit"><i class="fa-solid fa-trash"></i></button>
+                                    <button type="button" class="btn2 delete-task-btn" data-task-id="{{ $task->id }}">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -117,6 +121,16 @@
         $(document).ready(function() {
             $('#alert').fadeOut(5000, function() {
                 let visible = false;
+            });
+
+            // Delete confirm
+            $('.delete-task-btn').on('click', function() {
+                var taskId = $(this).data('task-id');
+                var form = $('#delete-task-form-' + taskId);
+
+                if (confirm('Are you sure you want to delete this task?')) {
+                    form.submit();
+                }
             });
         });
     </script>

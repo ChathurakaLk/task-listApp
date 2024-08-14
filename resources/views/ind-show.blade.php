@@ -2,7 +2,7 @@
 @section('title', 'Show Task')
 @section('main')
 
-    <div class="container">
+    <div class="container mt-5">
         <table class="table">
             <thead>
                 <tr>
